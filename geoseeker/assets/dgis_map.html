@@ -1,0 +1,99 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<meta charset="utf-8"/>
+    <title>Моя карта</title> 
+    <script type="text/javascript" src="http://maps.api.2gis.ru/1.0"></script> 
+	<script type="text/javascript">
+		var myMap;
+        // Создаем обработчик загрузки страницы: 
+        DG.autoload(function() { 
+            
+			// Создаем объект карты, связанный с контейнером: 
+            myMap = new DG.Map('myMapId'); 
+            
+			// Устанавливаем центр карты, и коэффициент масштабирования: 
+            myMap.setCenter(new DG.GeoPoint(82.927810142519,55.028936234826), 19); 
+            
+			// Добавляем элемент управления коэффициентом масштабирования: 
+            //myMap.controls.add(new DG.Controls.Zoom()); 
+			
+			// Отключение элемента разворачивания карты на весь экран.
+			//myMap.fullscreen.disable();
+			
+			// Включение функции геокодирования.
+			myMap.geoclicker.enable();
+			
+			// Создаем объект стилей:
+			var style = new DG.Style.Geometry();
+			
+			// Устанавливаем значения свойств:
+			style.strokeColor = "blue";
+			style.strokeOpacity = 1;
+			style.strokeWidth = 3;
+			style.fillColor = "#ff00ff";
+			style.fillOpacity = 0.4;
+ 
+			// Устанавливаем стиль:
+			myMap.geoclicker.setStyle(style);
+ 
+			// Максимально возможный размер масштабирования.
+			//myMap.setMaxZoom(15) // 18
+			
+			// Минимально возможный размер масштабирования.
+			//myMap.setMinZoom(5) // 1
+            
+			// Курсор.
+			//myMap.addCursor(DG.Cursor.CROSSHAIR);
+			
+			// Создаем балун:
+            var myBalloon = new DG.Balloons.Common({
+                // Местоположение на которое указывает балун: 
+                 geoPoint: new DG.GeoPoint(82.927810142519,55.028936234826),
+                 // Устанавливаем текст, который будет отображатся при открытии балуна:
+                 contentHtml: 'Привет!<br>Вы кликнули по мне :)'
+            });
+            // Создаем маркер:
+            var myMarker = new DG.Markers.Common({
+                 // Местоположение на которое указывает маркер:
+                 geoPoint: new DG.GeoPoint(82.927810142519,55.028936234826),
+                 // Функция, вызываемая при клике по маркеру
+                 clickCallback: function() {
+                    if (! myMap.balloons.getDefaultGroup().contains(myBalloon)) {
+                        // Если балун еще не был добавлен на карту, добавляем его:
+                         myMap.balloons.add(myBalloon);
+                     } else {
+                         // Показываем уже ранее добавленный на карту балун
+                         myBalloon.show();
+                     }
+                }
+				});
+            // Добавить маркер на карту:
+            myMap.markers.add(myMarker);
+        });
+		<!--
+		function toNorth() {
+           myMap.moveN(50);
+        }
+		function toSouth() {
+           myMap.moveS(50);
+		  
+		   //myMap.zoomIn();
+        }
+		-->
+	</script>
+</head> 
+<body> 
+<p>Карта</p>
+ <div id="myMapId" style="width:100px; height:100px"></div> 
+<!--
+    <div id="myMapId" style="width:100%; height:100%"></div> 
+	
+	<p>Смещение карты:</p>
+        <ul>
+            <li><a href="#" onclick="toNorth();">На север</a></li>
+            <li><a href="#" onclick="toSouth();">На юг</a></li>
+        </ul>
+		-->
+</body> 
+</html>
